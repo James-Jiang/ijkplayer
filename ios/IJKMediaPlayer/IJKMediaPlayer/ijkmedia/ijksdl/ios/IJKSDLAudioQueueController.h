@@ -1,6 +1,7 @@
 /*
  * IJKSDLAudioQueueController.h
  *
+ * Copyright (c) 2013-2014 Bilibili
  * Copyright (c) 2013-2014 Zhang Rui <bbcallen@gmail.com>
  *
  * based on https://github.com/kolyvan/kxmovie
@@ -28,13 +29,16 @@
 
 @interface IJKSDLAudioQueueController : NSObject
 
-- (id)initWithAudioSpec:(SDL_AudioSpec *)aSpec;
+- (id)initWithAudioSpec:(const SDL_AudioSpec *)aSpec;
 
 - (void)play;
 - (void)pause;
 - (void)flush;
 - (void)stop;
 - (void)close;
+- (void)setPlaybackRate:(float)playbackRate;
+- (void)setPlaybackVolume:(float)playbackVolume;
+- (double)get_latency_seconds;
 
 @property (nonatomic, readonly) SDL_AudioSpec spec;
     

@@ -1,6 +1,7 @@
 /*
  * IJKMediaUtils.m
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -24,30 +25,27 @@
 
 @implementation IJKMediaUtils
 
-+ (NSString*)createTempFileNameForFFConcat
++ (NSError*)createErrorWithDomain: (NSString*)domain
+                             code: (NSInteger)code
+                      description: (NSString*)description
+                           reason: (NSString*)reason
 {
-    return [IJKMediaUtils createTempFileNameWithPrefix:@"ffconcat-"];
-}
+    /* Generate an error describing the failure. */
+    if (description == nil)
+        description = @"";
+    if (reason == nil)
+        reason = @"";
 
-+ (NSString*)createTempFileNameWithPrefix: (NSString*)aPrefix
-{
-    return [IJKMediaUtils createTempFileNameInDirectory: NSTemporaryDirectory()
-                                             withPrefix: aPrefix];
-}
-
-+ (NSString*)createTempFileNameInDirectory: (NSString*)aDirectory
-                                withPrefix: (NSString*)aPrefix
-{
-    NSString* templateStr = [NSString stringWithFormat:@"%@/%@XXXXX", aDirectory, aPrefix];
-    char template[templateStr.length + 1];
-    strcpy(template, [templateStr cStringUsingEncoding:NSASCIIStringEncoding]);
-    char* filename = mktemp(template);
-
-    if (filename == NULL) {
-        NSLog(@"Could not create file in directory %@", aDirectory);
-        return nil;
-    }
-    return [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
+    NSString *localizedDescription = NSLocalizedString(description, description);
+    NSString *localizedFailureReason = NSLocalizedString(reason, reason);
+    NSDictionary *errorDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                               localizedDescription, NSLocalizedDescriptionKey,
+                               localizedFailureReason, NSLocalizedFailureReasonErrorKey,
+                               nil];
+    NSError *error = [NSError errorWithDomain:domain
+                                         code:0
+                                     userInfo:errorDict];
+    return error;
 }
 
 @end

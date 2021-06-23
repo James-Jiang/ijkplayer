@@ -2,6 +2,7 @@
  * ijksdl_android.h
  *****************************************************************************
  *
+ * Copyright (c) 2013 Bilibili
  * copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -27,6 +28,7 @@
 #include "../ijksdl.h"
 
 #include "ijksdl_aout_android_audiotrack.h"
+#include "ijksdl_aout_android_opensles.h"
 
 #include "ijksdl_vout_android_nativewindow.h"
 #include "ijksdl_vout_android_surface.h"

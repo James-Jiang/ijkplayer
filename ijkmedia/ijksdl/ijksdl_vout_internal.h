@@ -2,6 +2,7 @@
  * ijksdl_vout_internal.h
  *****************************************************************************
  *
+ * Copyright (c) 2013 Bilibili
  * copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -24,15 +25,17 @@
 #ifndef IJKSDL__IJKSDL_VOUT_INTERNAL_H
 #define IJKSDL__IJKSDL_VOUT_INTERNAL_H
 
+#include <stdlib.h>
+#include <string.h>
 #include "ijksdl_vout.h"
 
 inline static SDL_Vout *SDL_Vout_CreateInternal(size_t opaque_size)
 {
-    SDL_Vout *vout = (SDL_Vout*) mallocz(sizeof(SDL_Vout));
+    SDL_Vout *vout = (SDL_Vout*) calloc(1, sizeof(SDL_Vout));
     if (!vout)
         return NULL;
 
-    vout->opaque = mallocz(opaque_size);
+    vout->opaque = calloc(1, opaque_size);
     if (!vout->opaque) {
         free(vout);
         return NULL;
@@ -64,11 +67,11 @@ inline static void SDL_Vout_FreeInternal(SDL_Vout *vout)
 
 inline static SDL_VoutOverlay *SDL_VoutOverlay_CreateInternal(size_t opaque_size)
 {
-    SDL_VoutOverlay *overlay = (SDL_VoutOverlay*) mallocz(sizeof(SDL_VoutOverlay));
+    SDL_VoutOverlay *overlay = (SDL_VoutOverlay*) calloc(1, sizeof(SDL_VoutOverlay));
     if (!overlay)
         return NULL;
 
-    overlay->opaque = mallocz(opaque_size);
+    overlay->opaque = calloc(1, opaque_size);
     if (!overlay->opaque) {
         free(overlay);
         return NULL;
@@ -87,7 +90,5 @@ inline static void SDL_VoutOverlay_FreeInternal(SDL_VoutOverlay *overlay)
     memset(overlay, 0, sizeof(SDL_VoutOverlay));
     free(overlay);
 }
-
-#define SDLTRACE ALOGW
 
 #endif

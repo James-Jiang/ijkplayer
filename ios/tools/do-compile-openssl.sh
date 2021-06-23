@@ -1,4 +1,20 @@
 #! /usr/bin/env bash
+#
+# Copyright (C) 2013-2014 Bilibili
+# Copyright (C) 2013-2014 Zhang Rui <bbcallen@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
 # This script is based on projects below
 # https://github.com/x2on/OpenSSL-for-iPhone
@@ -70,30 +86,34 @@ FF_BUILD_NAME="unknown"
 FF_XCRUN_PLATFORM="iPhoneOS"
 FF_XCRUN_OSVERSION=
 FF_GASPP_EXPORT=
+FF_XCODE_BITCODE=
 
-if [ "$FF_ARCH" == "i386" ]; then
+if [ "$FF_ARCH" = "i386" ]; then
     FF_BUILD_NAME="openssl-i386"
     FF_XCRUN_PLATFORM="iPhoneSimulator"
-    FF_XCRUN_OSVERSION="-mios-simulator-version-min=5.1.1"
+    FF_XCRUN_OSVERSION="-mios-simulator-version-min=6.0"
     OPENSSL_CFG_FLAGS="darwin-i386-cc $OPENSSL_CFG_FLAGS"
-elif [ "$FF_ARCH" == "x86_64" ]; then
+elif [ "$FF_ARCH" = "x86_64" ]; then
     FF_BUILD_NAME="openssl-x86_64"
     FF_XCRUN_PLATFORM="iPhoneSimulator"
     FF_XCRUN_OSVERSION="-mios-simulator-version-min=7.0"
     OPENSSL_CFG_FLAGS="darwin64-x86_64-cc $OPENSSL_CFG_FLAGS"
-elif [ "$FF_ARCH" == "armv7" ]; then
+elif [ "$FF_ARCH" = "armv7" ]; then
     FF_BUILD_NAME="openssl-armv7"
-    FF_XCRUN_OSVERSION="-miphoneos-version-min=5.1.1"
+    FF_XCRUN_OSVERSION="-miphoneos-version-min=6.0"
+    FF_XCODE_BITCODE="-fembed-bitcode"
     OPENSSL_CFG_FLAGS="$OPENSSL_CFG_FLAGS_ARM $OPENSSL_CFG_FLAGS"
 #    OPENSSL_CFG_CPU="--cpu=cortex-a8"
-elif [ "$FF_ARCH" == "armv7s" ]; then
+elif [ "$FF_ARCH" = "armv7s" ]; then
     FF_BUILD_NAME="openssl-armv7s"
     OPENSSL_CFG_CPU="--cpu=swift"
-    FF_XCRUN_OSVERSION="-miphoneos-version-min=5.1.1"
+    FF_XCRUN_OSVERSION="-miphoneos-version-min=6.0"
+    FF_XCODE_BITCODE="-fembed-bitcode"
     OPENSSL_CFG_FLAGS="$OPENSSL_CFG_FLAGS_ARM $OPENSSL_CFG_FLAGS"
-elif [ "$FF_ARCH" == "arm64" ]; then
+elif [ "$FF_ARCH" = "arm64" ]; then
     FF_BUILD_NAME="openssl-arm64"
-    FF_XCRUN_OSVERSION="-miphoneos-version-min=5.1.1"
+    FF_XCRUN_OSVERSION="-miphoneos-version-min=7.0"
+    FF_XCODE_BITCODE="-fembed-bitcode"
     OPENSSL_CFG_FLAGS="$OPENSSL_CFG_FLAGS_ARM $OPENSSL_CFG_FLAGS"
     FF_GASPP_EXPORT="GASPP_FIX_XCODE5=1"
 else
@@ -139,6 +159,7 @@ echo "\n--------------------"
 echo "[*] configurate openssl"
 echo "--------------------"
 
+OPENSSL_CFG_FLAGS="$OPENSSL_CFG_FLAGS $FF_XCODE_BITCODE"
 OPENSSL_CFG_FLAGS="$OPENSSL_CFG_FLAGS --openssldir=$FF_BUILD_PREFIX"
 
 # xcode configuration

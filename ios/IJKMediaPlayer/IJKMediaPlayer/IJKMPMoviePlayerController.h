@@ -1,6 +1,7 @@
 /*
  * IJKMPMoviePlayerController.h
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -21,9 +22,11 @@
  */
 
 #import "IJKMediaPlayback.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface IJKMPMoviePlayerController : MPMoviePlayerController <IJKMediaPlayback>
 
 - (id)initWithContentURL:(NSURL *)aUrl;
+- (id)initWithContentURLString:(NSString *)aUrl;
 
 @end

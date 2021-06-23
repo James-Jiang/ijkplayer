@@ -1,6 +1,7 @@
 /*
  * IJKFFMoviePlayerDef.h
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -22,7 +23,7 @@
 
 #import <Foundation/Foundation.h>
 #include "ijkplayer/ios/ijkplayer_ios.h"
-
+#include "ijkplayer/ijkmeta.h"
 
 
 struct IJKSize {

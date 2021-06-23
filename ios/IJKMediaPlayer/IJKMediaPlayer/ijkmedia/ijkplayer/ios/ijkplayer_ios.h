@@ -1,6 +1,7 @@
 /*
  * ijkplayer_ios.h
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -27,3 +28,4 @@
 IjkMediaPlayer *ijkmp_ios_create(int (*msg_loop)(void*));
 
 void            ijkmp_ios_set_glview(IjkMediaPlayer *mp, IJKSDLGLView *glView);
+bool            ijkmp_ios_is_videotoolbox_open(IjkMediaPlayer *mp);

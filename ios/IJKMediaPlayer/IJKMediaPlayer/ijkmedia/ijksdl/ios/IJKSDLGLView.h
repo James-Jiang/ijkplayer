@@ -1,6 +1,7 @@
 /*
  * IJKSDLGLView.h
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * based on https://github.com/kolyvan/kxmovie
@@ -23,17 +24,16 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "IJKSDLGLViewProtocol.h"
 
 #include "ijksdl/ijksdl_vout.h"
 
-@interface IJKSDLGLView : UIView
+@interface IJKSDLGLView : UIView <IJKSDLGLViewProtocol>
 
-- (id) initWithFrame:(CGRect)frame
-          withChroma:(int)chroma;
+- (id) initWithFrame:(CGRect)frame;
 - (void) display: (SDL_VoutOverlay *) overlay;
 
 - (UIImage*) snapshot;
-
-@property(nonatomic,strong) NSLock *appActivityLock;
+- (void)setShouldLockWhileBeingMovedToWindow:(BOOL)shouldLockWhiteBeingMovedToWindow __attribute__((deprecated("unused")));
 
 @end

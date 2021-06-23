@@ -1,6 +1,7 @@
 /*
  * ijkplayer_android.h
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -24,13 +25,21 @@
 #define IJKPLAYER_ANDROID__IJKPLAYER_ANDROID_H
 
 #include <jni.h>
+#include "ijkplayer_android_def.h"
 #include "../ijkplayer.h"
+
+typedef struct ijkmp_android_media_format_context {
+    const char *mime_type;
+    int         profile;
+    int         level;
+} ijkmp_android_media_format_context;
 
 // ref_count is 1 after open
 IjkMediaPlayer *ijkmp_android_create(int(*msg_loop)(void*));
 
-void            ijkmp_android_set_surface(JNIEnv *env, IjkMediaPlayer *mp, jobject android_surface);
-
-void            ijkmp_android_set_volume(JNIEnv *env, IjkMediaPlayer *mp, float left, float right);
+void ijkmp_android_set_surface(JNIEnv *env, IjkMediaPlayer *mp, jobject android_surface);
+void ijkmp_android_set_volume(JNIEnv *env, IjkMediaPlayer *mp, float left, float right);
+int  ijkmp_android_get_audio_session_id(JNIEnv *env, IjkMediaPlayer *mp);
+void ijkmp_android_set_mediacodec_select_callback(IjkMediaPlayer *mp, bool (*callback)(void *opaque, ijkmp_mediacodecinfo_context *mcc), void *opaque);
 
 #endif

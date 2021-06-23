@@ -2,6 +2,7 @@
  * android_nativewindow.h
  *****************************************************************************
  *
+ * Copyright (c) 2013 Bilibili
  * copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -27,6 +28,6 @@
 typedef struct ANativeWindow ANativeWindow;
 typedef struct SDL_VoutOverlay SDL_VoutOverlay;
 
-int sdl_native_window_display_l(ANativeWindow* native_window, SDL_VoutOverlay *overlay);
+int SDL_Android_NativeWindow_display_l(ANativeWindow* native_window, SDL_VoutOverlay *overlay);
 
 #endif

@@ -1,6 +1,7 @@
 /*
  * ijksdl_aout_ios_audiounit.m
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -30,11 +31,13 @@
 #import "IJKSDLAudioUnitController.h"
 #import "IJKSDLAudioQueueController.h"
 
-typedef struct SDL_Aout_Opaque {
-    IJKSDLAudioQueueController *aoutController;
-} SDL_Aout_Opaque;
+#define SDL_IOS_AUDIO_MAX_CALLBACKS_PER_SEC 15
 
-int aout_open_audio(SDL_Aout *aout, SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
+struct SDL_Aout_Opaque {
+    IJKSDLAudioQueueController *aoutController;
+};
+
+static int aout_open_audio(SDL_Aout *aout, const SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
 {
     assert(desired);
     SDLTRACE("aout_open_audio()\n");
@@ -52,7 +55,7 @@ int aout_open_audio(SDL_Aout *aout, SDL_AudioSpec *desired, SDL_AudioSpec *obtai
     return 0;
 }
 
-void aout_pause_audio(SDL_Aout *aout, int pause_on)
+static void aout_pause_audio(SDL_Aout *aout, int pause_on)
 {
     SDLTRACE("aout_pause_audio(%d)\n", pause_on);
     SDL_Aout_Opaque *opaque = aout->opaque;
@@ -64,7 +67,7 @@ void aout_pause_audio(SDL_Aout *aout, int pause_on)
     }
 }
 
-void aout_flush_audio(SDL_Aout *aout)
+static void aout_flush_audio(SDL_Aout *aout)
 {
     SDLTRACE("aout_flush_audio()\n");
     SDL_Aout_Opaque *opaque = aout->opaque;
@@ -72,7 +75,7 @@ void aout_flush_audio(SDL_Aout *aout)
     [opaque->aoutController flush];
 }
 
-void aout_close_audio(SDL_Aout *aout)
+static void aout_close_audio(SDL_Aout *aout)
 {
     SDLTRACE("aout_close_audio()\n");
     SDL_Aout_Opaque *opaque = aout->opaque;
@@ -80,7 +83,34 @@ void aout_close_audio(SDL_Aout *aout)
     [opaque->aoutController close];
 }
 
-void aout_free_l(SDL_Aout *aout)
+static void aout_set_playback_rate(SDL_Aout *aout, float playbackRate)
+{
+    SDLTRACE("aout_close_audio()\n");
+    SDL_Aout_Opaque *opaque = aout->opaque;
+
+    [opaque->aoutController setPlaybackRate:playbackRate];
+}
+
+static void aout_set_playback_volume(SDL_Aout *aout, float volume)
+{
+    SDLTRACE("aout_set_volume()\n");
+    SDL_Aout_Opaque *opaque = aout->opaque;
+
+    [opaque->aoutController setPlaybackVolume:volume];
+}
+
+static double auout_get_latency_seconds(SDL_Aout *aout)
+{
+    SDL_Aout_Opaque *opaque = aout->opaque;
+    return [opaque->aoutController get_latency_seconds];
+}
+
+static int aout_get_persecond_callbacks(SDL_Aout *aout)
+{
+    return SDL_IOS_AUDIO_MAX_CALLBACKS_PER_SEC;
+}
+
+static void aout_free_l(SDL_Aout *aout)
 {
     if (!aout)
         return;
@@ -105,10 +135,14 @@ SDL_Aout *SDL_AoutIos_CreateForAudioUnit()
     // SDL_Aout_Opaque *opaque = aout->opaque;
 
     aout->free_l = aout_free_l;
-    aout->open_audio = aout_open_audio;
+    aout->open_audio  = aout_open_audio;
     aout->pause_audio = aout_pause_audio;
     aout->flush_audio = aout_flush_audio;
     aout->close_audio = aout_close_audio;
 
+    aout->func_set_playback_rate = aout_set_playback_rate;
+    aout->func_set_playback_volume = aout_set_playback_volume;
+    aout->func_get_latency_seconds = auout_get_latency_seconds;
+    aout->func_get_audio_persecond_callbacks = aout_get_persecond_callbacks;
     return aout;
 }

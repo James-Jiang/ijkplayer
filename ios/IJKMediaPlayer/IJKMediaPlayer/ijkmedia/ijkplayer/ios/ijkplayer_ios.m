@@ -1,6 +1,7 @@
 /*
  * ijkplayer_ios.c
  *
+ * Copyright (c) 2013 Bilibili
  * Copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -29,6 +30,8 @@
 #include "ijkplayer/ff_fferror.h"
 #include "ijkplayer/ff_ffplay.h"
 #include "ijkplayer/ijkplayer_internal.h"
+#include "ijkplayer/pipeline/ffpipeline_ffplay.h"
+#include "pipeline/ffpipeline_ios.h"
 
 IjkMediaPlayer *ijkmp_ios_create(int (*msg_loop)(void*))
 {
@@ -40,8 +43,8 @@ IjkMediaPlayer *ijkmp_ios_create(int (*msg_loop)(void*))
     if (!mp->ffplayer->vout)
         goto fail;
 
-    mp->ffplayer->aout = SDL_AoutIos_CreateForAudioUnit();
-    if (!mp->ffplayer->vout)
+    mp->ffplayer->pipeline = ffpipeline_create_from_ios(mp->ffplayer);
+    if (!mp->ffplayer->pipeline)
         goto fail;
 
     return mp;
@@ -68,4 +71,23 @@ void ijkmp_ios_set_glview(IjkMediaPlayer *mp, IJKSDLGLView *glView)
     ijkmp_ios_set_glview_l(mp, glView);
     pthread_mutex_unlock(&mp->mutex);
     MPTRACE("ijkmp_ios_set_view(glView=%p)=void\n", (void*)glView);
+}
+
+bool ijkmp_ios_is_videotoolbox_open_l(IjkMediaPlayer *mp)
+{
+    assert(mp);
+    assert(mp->ffplayer);
+
+    return false;
+}
+
+bool ijkmp_ios_is_videotoolbox_open(IjkMediaPlayer *mp)
+{
+    assert(mp);
+    MPTRACE("%s()\n", __func__);
+    pthread_mutex_lock(&mp->mutex);
+    bool ret = ijkmp_ios_is_videotoolbox_open_l(mp);
+    pthread_mutex_unlock(&mp->mutex);
+    MPTRACE("%s()=%d\n", __func__, ret ? 1 : 0);
+    return ret;
 }

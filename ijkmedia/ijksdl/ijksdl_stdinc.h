@@ -2,6 +2,7 @@
  * ijksdl_stdinc.h
  *****************************************************************************
  *
+ * Copyright (c) 2013 Bilibili
  * copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -26,6 +27,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef int8_t      Sint8;
 typedef uint8_t     Uint8;

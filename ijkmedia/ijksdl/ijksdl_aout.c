@@ -2,6 +2,7 @@
  * ijksdl_aout.c
  *****************************************************************************
  *
+ * Copyright (c) 2013 Bilibili
  * copyright (c) 2013 Zhang Rui <bbcallen@gmail.com>
  *
  * This file is part of ijkPlayer.
@@ -23,8 +24,9 @@
 
 #include "ijksdl_aout.h"
 #include <stdlib.h>
+#include "ijkplayer/ff_ffplay_def.h"
 
-int SDL_AoutOpenAudio(SDL_Aout *aout, SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
+int SDL_AoutOpenAudio(SDL_Aout *aout, const SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
 {
     if (aout && desired && aout->open_audio)
         return aout->open_audio(aout, desired, obtained);
@@ -74,4 +76,60 @@ void SDL_AoutFreeP(SDL_Aout **paout)
 
     SDL_AoutFree(*paout);
     *paout = NULL;
+}
+
+double SDL_AoutGetLatencySeconds(SDL_Aout *aout)
+{
+    if (!aout)
+        return 0;
+
+    if (aout->func_get_latency_seconds)
+        return aout->func_get_latency_seconds(aout);
+
+    return aout->minimal_latency_seconds;
+}
+
+void SDL_AoutSetDefaultLatencySeconds(SDL_Aout *aout, double latency)
+{
+    if (aout) {
+        if (aout->func_set_default_latency_seconds)
+            aout->func_set_default_latency_seconds(aout, latency);
+        aout->minimal_latency_seconds = latency;
+    }
+}
+
+void SDL_AoutSetPlaybackRate(SDL_Aout *aout, float playbackRate)
+{
+    if (aout) {
+        if (aout->func_set_playback_rate)
+            aout->func_set_playback_rate(aout, playbackRate);
+    }
+}
+
+void SDL_AoutSetPlaybackVolume(SDL_Aout *aout, float volume)
+{
+    if (aout) {
+        if (aout->func_set_playback_volume)
+            aout->func_set_playback_volume(aout, volume);
+    }
+}
+
+int SDL_AoutGetAudioSessionId(SDL_Aout *aout)
+{
+    if (aout) {
+        if (aout->func_get_audio_session_id) {
+            return aout->func_get_audio_session_id(aout);
+        }
+    }
+    return 0;
+}
+
+int SDL_AoutGetAudioPerSecondCallBacks(SDL_Aout *aout)
+{
+    if (aout) {
+        if (aout->func_get_audio_persecond_callbacks) {
+            return aout->func_get_audio_persecond_callbacks(aout);
+        }
+    }
+    return SDL_AUDIO_MAX_CALLBACKS_PER_SEC;
 }
